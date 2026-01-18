@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Page</title>
+    <link rel="stylesheet" th:href="@{Task.css}">
+</head>
+<body>
+
+<h2>Create Task</h2>
+
+<form th:action="@{/createtask}" th:object="${task}" method="post">
+    <label>Title:</label>
+    <input type="text" th:field="*{title}" required />
+
+    <br><br>
+
+    <label>
+        <input type="checkbox" th:field="*{completed}" />
+        Completed
+    </label>
+
+    <br><br>
+
+    <button type="submit">Create Task</button>
+</form>
+
+<hr>
+
+<h2>Task List</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="t : ${tasks}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.title}"></td>
+
+        <!-- TOGGLE STATUS -->
+        <td>
+            <form th:action="@{/tasks/toggle/{id}(id=${t.id})}"
+                  method="post">
+                <input type="checkbox"
+                       th:checked="${t.completed}"
+                       onchange="this.form.submit()" />
+            </form>
+        </td>
+
+        <!-- DELETE BUTTON -->
+        <td>
+            <form th:action="@{/tasks/delete/{id}(id=${t.id})}"
+                  method="post">
+                <button type="submit"
+                        onclick="return confirm('Delete this task?')">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>
